@@ -505,7 +505,7 @@ void Plan::CatchPassedBall()
 		if (m_behaviour_.move2target(headoffPoint, robot_pos_))
 		{
 			//接球
-			if (robot_pos_.distance(ball_pos_) <= 50.0 && ball_is_free())
+			if (robot_pos_.distance(ball_pos_) <= 37.2)
 			{
 				action->handle_enable = 1;
 				action->move_action = CatchBall;
@@ -585,7 +585,7 @@ void Plan::ProtectBallTry()
 void Plan::catchBall()
 {
 	auto r2b = ball_pos_ - robot_pos_;
-	action->handle_enable = 1;
+	//action->handle_enable = 1;
 	action->move_action = CatchBall;
 	action->rotate_acton = CatchBall;
 	action->rotate_mode = 0;
@@ -646,7 +646,7 @@ void Plan::shoot_1()
 	action->rotate_mode = 0;
 	auto shoot_line = shoot_target - robot_pos_;
 
-	m_behaviour_.move2oriFAST(shoot_line.angle().radian_, robot_ori_.radian_, 0.087, {0.0, 0.0}, 20.0, 40.0);
+	m_behaviour_.move2oriFAST(shoot_line.angle().radian_, robot_ori_.radian_, 0.087, {0.0, 0.0}, 20.0, 100.0);
 
 	//求出球的运动轨迹方程
 	double t_x = robot_pos_.x_, t_y = robot_pos_.y_;
@@ -654,6 +654,7 @@ void Plan::shoot_1()
 	double b = t_y - k * t_x;
 	double y0 = 1100.0 * k + b;
 	bool b1 = robot_ori_.radian_ / DEG2RAD >= -90.0 && robot_ori_.radian_ / DEG2RAD <= 90.0;
+
 	if (b1 && y0 <= 95 && y0 >= -95 && fabs(y0 - world_model_->Opponents_[0].y_) >= 67.0)
 	{
 		action->shootPos = RUN;
@@ -662,6 +663,11 @@ void Plan::shoot_1()
 		std::cout << "shoot done " << std::endl;
 
 		return;
+	}
+
+	else
+	{
+		
 	}
 
 	if (fabs(shoot_line.angle().radian_ - robot_ori_.radian_) <= 0.10)
@@ -824,7 +830,7 @@ void Plan::defend1v1()
 		if (m_behaviour_.move2target(headoffPoint, robot_pos_))
 		{
 			//接球
-			if (robot_pos_.distance(ball_pos_) <= 50.0 && ball_is_free())
+			if (robot_pos_.distance(ball_pos_) <= 37.2 )
 			{
 				action->handle_enable = 1;
 				action->move_action = CatchBall;

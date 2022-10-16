@@ -78,7 +78,7 @@ namespace nubot
         bool move2target(DPoint target, DPoint pos, double distance_thres = 20.0);
         void subtarget(DPoint &target_pos_, DPoint &robot_pos_);
         bool calPassingError(DPoint passRobot, DPoint catchRobot, double halfLength = 28.0);
-        bool move2oriFAST(double t2r, double angle, double angle_thres = 5.0 * DEG2RAD, DPoint tar_pos = DPoint(0.0, 0.0), double tar_half_length = 20.0, double speedup = 12.0);
+        bool move2oriFAST(double t2r, double angle, double angle_thres = 5.0 * DEG2RAD, DPoint tar_pos = DPoint(0.0, 0.0), double tar_half_length = 20.0, double speedup = 30.0);
         bool move2oriFast(double target, double angle, double angle_thres = (0.13));
         void subtarget(DPoint target_pos_, DPoint robot_pos_ ,bool avoid_ball);
         bool move2targetk(DPoint target, DPoint pos, double distance_thres=20.0,int k=1);
