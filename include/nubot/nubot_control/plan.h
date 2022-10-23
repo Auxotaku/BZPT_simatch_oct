@@ -57,6 +57,7 @@ namespace nubot
 		bool inourfield_;
 		bool inoppfield_;
 		bool shoot_out;
+		bool ispenaltyOccupied;
 		double lastdirection;
 
 		DPoint robot_pos_;
@@ -132,6 +133,9 @@ namespace nubot
 		//不能传球返回0, 否则返回传球方式
 		int canPass(int);
 		const DPoint get_fly_landing_point();
+
+		//判断禁区内是否有我方球员
+		bool penaltyOccupied();
 
 	private:
 		const double DEG2RAD = 0.01745329251994329547;

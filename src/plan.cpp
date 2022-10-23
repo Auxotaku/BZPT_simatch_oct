@@ -557,6 +557,20 @@ bool Plan::PassBall_Action(int catch_ID, int pass_mode_)
 	return shoot_flag;
 }
 
+bool Plan::penaltyOccupied()
+{
+	for (int i = 1; i < 5; ++i)
+	{
+		if(i == world_model_->AgentID_) continue;
+		DPoint rob_pos = world_model_->RobotInfo_[i].getLocation();
+		if (rob_pos.x_ > 875 && abs(rob_pos.y_) < 345){
+			return true;
+		}
+	}
+	return false;
+	
+}
+
 void Plan::ProtectBallTry()
 {
 	double OppAngle[5];
@@ -1105,6 +1119,7 @@ void Plan::update_a()
 	update_opp_sort();
 	update_near();
 	landing_pos_ = landing_pos();
+	ispenaltyOccupied = penaltyOccupied();
 }
 
 void Plan::pre_attack()
@@ -1373,6 +1388,7 @@ void Plan::defend()
 						if (landing_pos_.x_ > -1200) // ball is flying
 						{
 							move2landingPos();
+							catchBall();
 						}
 						else
 						{

@@ -76,9 +76,9 @@ FieldInformation::FieldInformation()
     opp_penaltyarea_[1] = DPoint(xline_[2],yline_[1]);
     opp_penaltyarea_[2] = DPoint(xline_[2],yline_[4]);
     opp_penaltyarea_[3] = DPoint(xline_[0],yline_[4]);
-    oppPenaltyLine_[0] = LineSegment(opp_penaltyarea_[0], opp_penaltyarea_[1]); //我方大禁区上横线
-    oppPenaltyLine_[1] = LineSegment(opp_penaltyarea_[1], opp_penaltyarea_[2]); //我方大禁区竖线
-    oppPenaltyLine_[2] = LineSegment(opp_penaltyarea_[2], opp_penaltyarea_[3]); //我方大禁区下横线
+    oppPenaltyLine_[0] = LineSegment(opp_penaltyarea_[0], opp_penaltyarea_[1]); //对方大禁区上横线
+    oppPenaltyLine_[1] = LineSegment(opp_penaltyarea_[1], opp_penaltyarea_[2]); //对方大禁区竖线
+    oppPenaltyLine_[2] = LineSegment(opp_penaltyarea_[2], opp_penaltyarea_[3]); //对方大禁区下横线
 
     our_goalarea_[0] = DPoint(xline_[6],yline_[2]);   //(-900,175)   我方小禁区
     our_goalarea_[1] = DPoint(xline_[5],yline_[2]);   //(-825,175)
