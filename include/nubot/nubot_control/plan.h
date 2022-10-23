@@ -128,6 +128,7 @@ namespace nubot
 		int shoot_cnt = 0;
 		// shoot
 		void shoot_1();
+		void shoot_2();
 		//不能传球返回0, 否则返回传球方式
 		int canPass(int);
 		const DPoint get_fly_landing_point();

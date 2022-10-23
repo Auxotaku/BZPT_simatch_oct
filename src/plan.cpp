@@ -676,6 +676,47 @@ void Plan::shoot_1()
 	}
 }
 
+void Plan::shoot_2()
+{
+	const auto &goal_up = world_model_->field_info_.oppGoal_[GOAL_UPPER];
+	const auto &goal_low = world_model_->field_info_.oppGoal_[GOAL_LOWER];
+	static auto shoot_target = (world_model_->Opponents_[0].y_ > 0) ? goal_low : goal_up;
+
+	action->move_action = TurnForShoot;
+	action->rotate_acton = TurnForShoot;
+	action->rotate_mode = 0;
+	auto shoot_line = shoot_target - robot_pos_;
+
+	m_behaviour_.move2oriFAST(shoot_line.angle().radian_, robot_ori_.radian_, 0.087, {0.0, 0.0}, 20.0, 100.0);
+
+	//求出球的运动轨迹方程
+	double t_x = robot_pos_.x_, t_y = robot_pos_.y_;
+	auto k = tan(robot_ori_.radian_);
+	double b = t_y - k * t_x;
+	double y0 = 1100.0 * k + b;
+	bool b1 = robot_ori_.radian_ / DEG2RAD >= -90.0 && robot_ori_.radian_ / DEG2RAD <= 90.0;
+
+	while (b1 && y0 <= 95 && y0 >= -95 && fabs(y0 - world_model_->Opponents_[0].y_) >= 70.0)
+	{
+		t_x = robot_pos_.x_, t_y = robot_pos_.y_;
+		k = tan(robot_ori_.radian_);
+		b = t_y - k * t_x;
+		y0 = 1100.0 * k + b;
+		b1 = robot_ori_.radian_ / DEG2RAD >= -90.0 && robot_ori_.radian_ / DEG2RAD <= 90.0;
+
+		action->shootPos = RUN;
+		action->strength = 500;
+		shoot_flag = true;
+		std::cout << "shoot done " << std::endl;
+
+		return;
+	}
+	
+	if (fabs(shoot_line.angle().radian_ - robot_ori_.radian_) <= 0.10)
+	{
+		shoot_target = (shoot_target == goal_up) ? goal_low : goal_up;
+	}
+}
 //远距离吊射 难以带球或传球时调用
 void Plan::lob()
 {
@@ -1701,7 +1742,7 @@ void Plan::attack()
 			//距球门足够近 可以射门
 			if (opp_goal.distance(robot_pos_) <= 410.0)
 			{
-				shoot_1();
+				shoot_2();
 			}
 
 			else
