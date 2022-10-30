@@ -1161,6 +1161,20 @@ void Plan::pre_attack()
 		m_behaviour_.move2oriFAST(r2b.angle().radian_, robot_ori_.radian_);
 }
 
+void Plan::pre_attack_2()
+{
+	DPoint target;
+	target = world_model_->assist_pt_;
+	auto r2b = ball_pos_ - robot_pos_;
+
+	action->handle_enable = 1;
+	action->move_action = CatchBall;
+	action->rotate_acton = CatchBall;
+	action->rotate_mode = 0;
+	if (m_behaviour_.move2target(target, robot_pos_))
+		m_behaviour_.move2oriFAST(r2b.angle().radian_, robot_ori_.radian_);
+}
+
 void Plan::defend_point(DPoint target_pos_)
 {
 	DPoint target;
@@ -1844,7 +1858,7 @@ void Plan::attack()
 
 	//不带球的球员
 	else
-		{
+	{
 			
 			//enterFrom进入威胁区的位置 SIDE MID NERVER
 			enterFrom = NEVER;
@@ -1858,7 +1872,7 @@ void Plan::attack()
 
                 if(world_model_->AgentID_ == our_nearest_oppgoal_ID)//我距离敌方球门最近
 				{
-					pre_attack();
+					pre_attack_2();
 				}
 				else
 				{
@@ -1880,25 +1894,26 @@ void Plan::attack()
 					{	
 						DPoint target;
 
-						if(isInOurGround())
-						{
-							int opp_near_goal = opp_nearestToOurGoal();
-							DPoint opp_danger_pos = world_model_->Opponents_[opp_near_goal];
+						// if(isInOurGround())
+						// {
+						// 	int opp_near_goal = opp_nearestToOurGoal();
+						// 	DPoint opp_danger_pos = world_model_->Opponents_[opp_near_goal];
 
-							target = opp_danger_pos.pointofline(opp_danger_pos, 125.0);
+						// 	target = opp_danger_pos.pointofline(opp_danger_pos, 125.0);
 
-						}
-						else
-						{
-							if(world_model_->RobotInfo_[our_dribble-1].getLocation().y_ > 0)
-							{
-								target = DPoint(-100,350);
-							}
-							else 
-							{
-								target = DPoint(-100,-350);
-							}
-						}
+						// }
+						// else
+						// {
+						// 	if(world_model_->RobotInfo_[our_dribble-1].getLocation().y_ > 0)
+						// 	{
+						// 		target = DPoint(-100,350);
+						// 	}
+						// 	else 
+						// 	{
+						// 		target = DPoint(-100,-350);
+						// 	}
+						// }
+						tar_pos_ = world_model_->pass_pt_;
 						action->handle_enable = 1;
 						action->move_action = CatchBall;
 						action->rotate_acton = CatchBall;
@@ -1919,54 +1934,84 @@ void Plan::attack()
 					// }
 					else //我是离球最远的球员 找位置准备接球
 					{
-						DPoint dribble_pos = world_model_->RobotInfo_[our_dribble - 1].getLocation();
-                        int tmpx = 10000, tmpy = 10000;
-                        double max_dis = 0;
-                        DPoint tmp;
-                        for (int i = -500; i <= 0; i += 100) {
-                            for (int j = -700; j <= 700; j += 100) {
-                                tmp.x_ = double(i);
-                                tmp.y_ = double(j);
-                                if(tmp.distance(dribble_pos) > 1000) continue;
-                                double dis = 0.0;
-                                for(int opp = 0; opp < 5; opp++){
-                                    DPoint oppp = world_model_->Opponents_[opp];
-                                    dis += (((oppp - tmp).length()) * ((oppp - tmp).length()));
-                                }
-                                if (dis > max_dis) {
-                                    max_dis = dis;
-                                    tmpx = i;
-                                    tmpy = j;
-                                }
-                            }
-                        }
-                        DPoint square_center = DPoint(double(tmpx), double(tmpy));
-                        DPoint tmp2;
-                        for (int i = -2; i <= 2; i++) {
-                            for (int j = -2; j <= 2; j++) {
-                                tmp2.x_ = square_center.x_ + i * 50;
-                                tmp2.y_ - square_center.y_ + j * 50;
-                                if(tmp2.distance(dribble_pos) > 1000) continue;
-                                double dis = 0.0;
-                                for(int opp = 0; opp < 5; opp++){
-                                    DPoint oppp = world_model_->Opponents_[opp];
-                                    dis += (((oppp - tmp).length()) * ((oppp - tmp).length()));
-                                }
-                                if (dis > max_dis) {
-                                    tar_pos_ = tmp2;
-                                    max_dis = dis;
-                                }
-                            }
-                        }
-					}
+					// 	DPoint dribble_pos = world_model_->RobotInfo_[our_dribble - 1].getLocation();
+                    //     int tmpx = 10000, tmpy = 10000;
+                    //     double max_dis = 0;
+                    //     DPoint tmp;
+                    //     for (int i = -500; i <= 0; i += 100) {
+                    //         for (int j = -700; j <= 700; j += 100) {
+                    //             tmp.x_ = double(i);
+                    //             tmp.y_ = double(j);
+                    //             if(tmp.distance(dribble_pos) > 1000) continue;
+                    //             double dis = 0.0;
+                    //             for(int opp = 0; opp < 5; opp++){
+                    //                 DPoint oppp = world_model_->Opponents_[opp];
+                    //                 dis += (((oppp - tmp).length()) * ((oppp - tmp).length()));
+                    //             }
+                    //             if (dis > max_dis) {
+                    //                 max_dis = dis;
+                    //                 tmpx = i;
+                    //                 tmpy = j;
+                    //             }
+                    //         }
+                    //     }
+                    //     DPoint square_center = DPoint(double(tmpx), double(tmpy));
+                    //     DPoint tmp2;
+                    //     for (int i = -2; i <= 2; i++) {
+                    //         for (int j = -2; j <= 2; j++) {
+                    //             tmp2.x_ = square_center.x_ + i * 50;
+                    //             tmp2.y_ - square_center.y_ + j * 50;
+                    //             if(tmp2.distance(dribble_pos) > 1000) continue;
+                    //             double dis = 0.0;
+                    //             for(int opp = 0; opp < 5; opp++){
+                    //                 DPoint oppp = world_model_->Opponents_[opp];
+                    //                 dis += (((oppp - tmp).length()) * ((oppp - tmp).length()));
+                    //             }
+                    //             if (dis > max_dis) {
+                    //                 tar_pos_ = tmp2;
+                    //                 max_dis = dis;
+                    //             }
+                    //         }
+                    //     }
+					// }
+					tar_pos_ = world_model_->middle_pt_;
 					action->move_action = CatchBall;
 					action->rotate_acton = CatchBall;
                 	action->rotate_mode = 0;
 					m_behaviour_.move2targetFast(tar_pos_,robot_pos_);
+					}
 				}
 			}
-		}			
-
-	//}
-	return;
+			else {				
+				DPoint tar_pos = DPoint(0.0,0.0);
+				int mid_id = -1; //中场队员
+				double minlength = MAX;
+				for (int i = 2; i <= 5; i++)
+				{
+					if (!ifParking(world_model_->RobotInfo_[i - 1].getLocation()) && i != our_near_ball_sort_ID[0] && i != our_nearest_oppgoal_ID) // except our robot which is the nearest to ball
+					{
+						if ((world_model_->RobotInfo_[i - 1].getLocation() - DPoint(0.0,0.0)).length() < minlength)
+						{
+							mid_id = i;
+							minlength = (world_model_->RobotInfo_[i - 1].getLocation() - DPoint(0.0,0.0)).length();
+						}
+					}
+				}
+				
+				if (world_model_->AgentID_ == our_nearest_oppgoal_ID) {
+					pre_attack_2();
+				}
+				else if (world_model_->AgentID_ == mid_id){
+					tar_pos = world_model_->middle_pt_;
+				}
+				else {
+					tar_pos = world_model_->passive_pt_;
+				}
+				action->move_action = CatchBall;
+				action->rotate_acton = CatchBall;
+                action->rotate_mode = 0;
+				m_behaviour_.move2targetFast(tar_pos,robot_pos_);
+			}			
+			return;
+		}
 }

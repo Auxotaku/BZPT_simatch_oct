@@ -121,9 +121,10 @@ namespace nubot
 		bool moveBall(DPoint);
 		//准备进攻
 		void pre_attack();
+		void pre_attack_2();
 		//防守某个位置的机器人
 		void defend_point(DPoint);
-
+		void passWithDefend();
 		bool isMoving = false;
 		bool shoot_flag = false;
 		int shoot_cnt = 0;
@@ -214,6 +215,7 @@ namespace nubot
 		int dribble_dis();
 		//是否有敌方球员在我方半场
 		bool isInOurGround();
+
 
 		bool isInField(DPoint world_pt, double expand_len, double expand_width);
 		//远距离吊射
